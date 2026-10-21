@@ -26,46 +26,10 @@ jobs:
        # pecl-mongodb-suffix: ""
        # compose-file: "docker-compose.yml:..."
        include:
-          - php-base-image-version: "8.1-fpm"
-            dockerfile-flavour: "debian"
-            compose-file: "docker-compose.yml,docker-compose.fpm-nginx.yml"
-            experimental: false
-          - php-base-image-version: "8.2-fpm"
-            dockerfile-flavour: "debian"
-            compose-file: "docker-compose.yml,docker-compose.fpm-nginx.yml"
-            experimental: false
-          - php-base-image-version: "8.3-fpm"
-            dockerfile-flavour: "debian"
-            compose-file: "docker-compose.yml,docker-compose.fpm-nginx.yml"
-            experimental: false
-          - php-base-image-version: "8.4-fpm"
-            dockerfile-flavour: "debian"
-            compose-file: "docker-compose.yml,docker-compose.fpm-nginx.yml"
-            experimental: false
-          - php-base-image-version: "8.5-fpm"
-            dockerfile-flavour: "debian"
-            compose-file: "docker-compose.yml,docker-compose.fpm-nginx.yml"
-            experimental: true
-          - php-base-image-version: "8.1-apache"
-            dockerfile-flavour: "debian"
-            compose-file: "docker-compose.yml,docker-compose.apache.yml"
-            experimental: false
-          - php-base-image-version: "8.2-apache"
-            dockerfile-flavour: "debian"
-            compose-file: "docker-compose.yml,docker-compose.apache.yml"
-            experimental: false
-          - php-base-image-version: "8.3-apache"
-            dockerfile-flavour: "debian"
-            compose-file: "docker-compose.yml,docker-compose.apache.yml"
-            experimental: false
           - php-base-image-version: "8.4-apache"
             dockerfile-flavour: "debian"
             compose-file: "docker-compose.yml,docker-compose.apache.yml"
             experimental: false
-          - php-base-image-version: "8.5-apache"
-            dockerfile-flavour: "debian"
-            compose-file: "docker-compose.yml,docker-compose.apache.yml"
-            experimental: true
       fail-fast: false
     env:
       COMPOSE_FILE: ${{ matrix.compose-file }}
