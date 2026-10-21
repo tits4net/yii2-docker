@@ -70,12 +70,13 @@ jobs:
     env:
       COMPOSE_FILE: ${{ matrix.compose-file }}
       COMPOSE_PATH_SEPARATOR: ","
-      PHP_IMAGE_NAME: "yiisoftware/yii2-php"
+      PHP_IMAGE_NAME: ${{ vars.PHP_IMAGE_NAME || 'yiisoftware/yii2-php' }}
       PHP_BASE_IMAGE_VERSION: ${{ matrix.php-base-image-version }}
       DOCKERFILE_FLAVOUR: ${{ matrix.dockerfile-flavour }}
       X_LEGACY_GD_LIB: ${{ matrix.legacy-gd-lib }}
       PECL_XDEBUG_INSTALL_SUFFIX: ${{ matrix.pecl-xdebug-suffix }}
-      PECL_MONGODB_INSTALL_SUFFIX: ${{ matrix.pecl-mongodb-suffix }}
+      # mongodb-2.5.5 tarball currently returns HTTP 500 on pecl.php.net
+      PECL_MONGODB_INSTALL_SUFFIX: ${{ matrix.pecl-mongodb-suffix || '-2.5.3' }}
       PECL_IMAGICK_INSTALL_SUFFIX: ${{ matrix.pecl-imagick-suffix }}
     steps:
     - name: Checkout
