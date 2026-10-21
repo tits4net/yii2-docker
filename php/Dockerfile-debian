@@ -50,11 +50,24 @@ RUN apt-get update && \
 
 # Install common system packages for PHP extensions recommended for Yii 2.0 Framework
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
-# Retry, as pecl.php.net intermittently fails downloads (HTTP 500, missing REST xml)
+# Retry, as pecl.php.net intermittently fails downloads (HTTP 500, missing REST xml).
+# Unless a mongodb version is set, use the newest stable release whose tarball is actually downloadable.
 RUN for attempt in $(seq 1 20); do \
+        mongodb_suffix="${PECL_MONGODB_INSTALL_SUFFIX}"; \
+        if [ -z "${mongodb_suffix}" ]; then \
+            for version in $(curl -fsSL https://pecl.php.net/rest/r/mongodb/allreleases.xml \
+                    | grep -o '<v>[^<]*</v><s>stable</s>' | sed 's|<v>\([^<]*\)</v>.*|\1|'); do \
+                if curl -fsSL -r 0-0 -o /dev/null "https://pecl.php.net/get/mongodb-${version}.tgz"; then \
+                    mongodb_suffix="-${version}"; \
+                    break; \
+                fi; \
+                echo "mongodb ${version} is not downloadable from PECL, trying the previous release..."; \
+            done; \
+            echo "Using mongodb${mongodb_suffix:- (installer default)}"; \
+        fi; \
         install-php-extensions \
             imagick${PECL_IMAGICK_INSTALL_SUFFIX} \
-            mongodb${PECL_MONGODB_INSTALL_SUFFIX} \
+            mongodb${mongodb_suffix} \
             xdebug${PECL_XDEBUG_INSTALL_SUFFIX} \
             pdo_mysql \
             pdo_pgsql \

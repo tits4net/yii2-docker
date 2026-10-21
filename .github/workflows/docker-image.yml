@@ -75,8 +75,7 @@ jobs:
       DOCKERFILE_FLAVOUR: ${{ matrix.dockerfile-flavour }}
       X_LEGACY_GD_LIB: ${{ matrix.legacy-gd-lib }}
       PECL_XDEBUG_INSTALL_SUFFIX: ${{ matrix.pecl-xdebug-suffix }}
-      # mongodb-2.5.5 tarball currently returns HTTP 500 on pecl.php.net
-      PECL_MONGODB_INSTALL_SUFFIX: ${{ matrix.pecl-mongodb-suffix || '-2.5.3' }}
+      PECL_MONGODB_INSTALL_SUFFIX: ${{ matrix.pecl-mongodb-suffix }}
       PECL_IMAGICK_INSTALL_SUFFIX: ${{ matrix.pecl-imagick-suffix }}
     steps:
     - name: Checkout
