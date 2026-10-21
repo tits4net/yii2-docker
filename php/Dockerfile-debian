@@ -50,19 +50,26 @@ RUN apt-get update && \
 
 # Install common system packages for PHP extensions recommended for Yii 2.0 Framework
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
-RUN install-php-extensions \
-        imagick${PECL_IMAGICK_INSTALL_SUFFIX} \
-        mongodb${PECL_MONGODB_INSTALL_SUFFIX} \
-        xdebug${PECL_XDEBUG_INSTALL_SUFFIX} \
-        pdo_mysql \
-        pdo_pgsql \
-        gd \
-        pcntl \
-        soap \
-        zip \
-        bcmath \
-        exif \
-        opcache
+# Retry, as pecl.php.net intermittently fails downloads (HTTP 500, missing REST xml)
+RUN for attempt in $(seq 1 20); do \
+        install-php-extensions \
+            imagick${PECL_IMAGICK_INSTALL_SUFFIX} \
+            mongodb${PECL_MONGODB_INSTALL_SUFFIX} \
+            xdebug${PECL_XDEBUG_INSTALL_SUFFIX} \
+            pdo_mysql \
+            pdo_pgsql \
+            gd \
+            pcntl \
+            soap \
+            zip \
+            bcmath \
+            exif \
+            opcache \
+        && exit 0; \
+        echo "install-php-extensions failed (attempt ${attempt}), retrying in 30s..."; \
+        sleep 30; \
+    done; \
+    exit 1
 
 # Add configuration files
 COPY image-files/dev/ /
